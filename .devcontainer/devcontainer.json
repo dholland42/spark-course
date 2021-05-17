@@ -1,0 +1,6 @@
+{
+    "build": {
+        "args":{"DEV_USER": "${localEnv:USER}"},
+        "dockerfile": "Dockerfile"
+    }
+}
