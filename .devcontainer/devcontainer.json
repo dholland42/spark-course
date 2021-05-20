@@ -1,6 +1,12 @@
 {
     "build": {
         "args":{"DEV_USER": "${localEnv:USER}"},
-        "dockerfile": "Dockerfile"
-    }
+        "dockerfile": "../Dockerfile",
+        "context": "..",
+    },
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+    ]
 }

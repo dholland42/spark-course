@@ -29,7 +29,7 @@ ENV POETRY_HOME=/opt/poetry
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 RUN chmod a+x /opt/poetry/bin/poetry
 RUN echo 'export PATH="$PATH:/opt/poetry/bin"' >> $HOME/.zshrc
-RUN /opt/poetry/bin/poetry config virtualenvs.create false
+# RUN /opt/poetry/bin/poetry config virtualenvs.create false
 
 # Spark dependencies
 # Default values can be overridden at build time
@@ -81,6 +81,14 @@ ENV PYTHONPATH="${SPARK_HOME}/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH"
 
 # install pyarrow
 RUN pip install --no-cache-dir pyarrow
+
+# install any other dependencies we may need
+RUN mkdir /opt/dependencies
+COPY poetry.lock /opt/dependencies
+COPY poetry.toml /opt/dependencies
+COPY pyproject.toml /opt/dependencies
+WORKDIR /opt/dependencies
+RUN /opt/poetry/bin/poetry install
 
 # set up the shared home directory
 RUN cp $HOME/.zshrc $USERHOME/.zshrc
