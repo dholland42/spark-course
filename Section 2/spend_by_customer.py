@@ -4,6 +4,11 @@ This script takes the data in `customer-orders.csv` and computes
 the total spend by customer. The data in the csv is of the format:
 
     (customer_id, item_id, amount_spend)
+
+The script reads and parses the data, and reduces by customer_id
+so that the final format of the results is:
+
+    (customer_id, sum(amount_spend))
 """
 from typing import Tuple
 from pprint import pprint
