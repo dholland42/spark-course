@@ -12,6 +12,7 @@ so that the final format of the results is:
 """
 from typing import Tuple
 from pprint import pprint
+from collections import OrderedDict
 
 import click
 from pyspark import SparkConf, SparkContext
@@ -32,7 +33,8 @@ def parse_line(line: str) -> Tuple[int, int, float]:
 
 @click.command()
 @click.option("--filename", "-f", required=True)
-def main(filename: str) -> None:
+@click.option("--sort-by-spend", "-s", is_flag=True, default=False)
+def main(filename: str, sort_by_spend: bool) -> None:
     """Main entry point and logic for the program."""
     sc = local_context(appname="WordCount")
     # read the data
@@ -43,6 +45,8 @@ def main(filename: str) -> None:
     data = data.map(lambda x: (x[0], x[2]))
     # compute total spend by customer
     data = data.reduceByKey(lambda current, new: current + new)
+    if sort_by_spend:
+        data = data.map(lambda x: (x[1], x[0])).sortByKey().map(lambda x: (x[1], x[0]))
     # display results
     pprint(data.collect())
 
