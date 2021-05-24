@@ -23,7 +23,7 @@ def local_session(appname: str) -> SparkSession:
 
 
 def parse_line(line: str) -> Row:
-    """Parse age and number of friends from a single line."""
+    """Parse a single line into a named, typed row."""
     fields = line.split(",")
     return Row(
         ID=int(fields[0]),
@@ -37,17 +37,29 @@ def parse_line(line: str) -> Row:
 @click.option("--filename", "-f", required=True)
 def main(filename: str) -> None:
     """Main entry point and logic for the program."""
+
+    # spark sql uses a session, not a context
     spark = local_session(appname="FriendsByAge")
+
+    # but you can access a context from the session, and read a text file
+    # in exactly the same way as before
     lines = spark.sparkContext.textFile(filename)
+
+    # parse into rows so we can create a dataframe
     parsed = lines.map(parse_line)
     schema_people = spark.createDataFrame(parsed).cache()
+
+    # create a temp view so we can run sql-like queries against it
     schema_people.createOrReplaceTempView("people")
 
+    # show only the teenagers
     teens = spark.sql("""select * from people where age >= 13 and age < 20""")
     pprint(teens.collect())
 
+    # show total number of observations by age
     schema_people.groupBy("age").count().orderBy("age").show()
 
+    # don't forget to stop the session!
     spark.stop()
 
 
