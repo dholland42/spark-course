@@ -12,7 +12,6 @@ so that the final format of the results is:
 """
 from typing import Tuple
 from pprint import pprint
-from collections import OrderedDict
 
 import click
 from pyspark import SparkConf, SparkContext
