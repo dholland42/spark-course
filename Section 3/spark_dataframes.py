@@ -15,10 +15,11 @@ import click
 from pyspark.sql import SparkSession
 
 
-def local_session(appname: str) -> SparkSession:
+def local_session(appname: str, cpus: str = "*") -> SparkSession:
     """Create a local spark context."""
-    spark = SparkSession.builder.master("local").appName(appname).getOrCreate()
-    return spark
+    spark = SparkSession.builder.master(f"local[{cpus}]")
+    spark = spark.appName(appname)
+    return spark.getOrCreate()
 
 
 @click.command()

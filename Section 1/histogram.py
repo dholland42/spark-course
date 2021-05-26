@@ -8,7 +8,7 @@ from pyspark import SparkConf, SparkContext
 
 def local_context(appname: str) -> SparkContext:
     """Create a local spark context."""
-    conf = SparkConf().setMaster("local").setAppName(appname)
+    conf = SparkConf().setMaster("local[*]").setAppName(appname)
     sc = SparkContext(conf=conf)
     return sc
 
