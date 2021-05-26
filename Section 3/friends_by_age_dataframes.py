@@ -58,6 +58,9 @@ def main(filename: str) -> None:
     # will pull the entire dataframe onto the controller
     friends_by_age.show(friends_by_age.count(), False)
 
+    # don't forget to stop the session!
+    spark.stop()
+
 
 if __name__ == "__main__":
     main()
